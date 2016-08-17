@@ -1,0 +1,100 @@
+//-*-mode:c++; mode:font-lock;-*-
+/**
+ * \class AtmTest
+ * \ingroup
+ * \brief This code is used to test the modified kasatm/atmosphere classes
+ * they have been modifed by GHS to use the CORSIKA AtmProf tables (or the 
+ * original US76)
+ *
+ * Original Author: Glenn H. Sembroski * $Author: cduke $
+ * $Date: 2011/08/10 20:03:53 $
+ * $Revision: 1.1 $
+ * $Tag$
+ *
+ **/
+
+//Written by:
+// G.H.Sembroski
+//Physics Dept.
+//Purdue Univ.
+//West Lafayette, In. 479096
+//sembrosk@physics.purdue.edu
+//765-494-5172
+
+// 27/12/10
+
+
+
+#include "stdint.h"
+#include <time.h>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+#include "kasatmGrISU.h"
+
+const float NM = 1.0E-09;
+
+int main(int argc, char** argv)
+{
+  // *********************************************************************
+  // Since this is just a test program no need for fancy inputs
+  // Outputs can be root TTree::ReadFile()compatable.
+  // *********************************************************************
+
+  //V.Crab.US76.50km
+  initAtmosphere("atmprof6.dat");
+  
+  float atmStepsKM=1.;
+  float atmTopKM = 50.0;
+  int numSteps= (atmTopKM/ atmStepsKM) + 1;
+
+const  float PlankConstant = 4.136e-15;  //eV
+  float wavelength = 450.;  //450 nm.
+  float altM = 100.0;
+  float wavelengthM = wavelength* (NM);
+  float IndexRef = index_of_ref (&wavelengthM, &altM);
+  float pi = 3.14159;
+ 
+  // get # photons as a function of different energies with angle 0 to vertical
+  //////////////////////////////////////////////////
+  
+  int m = 9.1e-31;
+  int n = (2.9e-4*(exp(-atmTopKM/7.1)));
+  int w1 = (.1); //.1 nm.
+  int w2 = (.01); //.01 nm.
+  int v = 3e8;
+  int c = v/(IndexRef);
+  int et = ( 1/sqrt(2*(n))-1);
+  int a = (1/137);
+  int B = (.75);
+  int N = (2*pi*a)*((1/w2)-(1/w1)*(1-(1/B*n^2))); //N=number of photons
+  //////////////////////////////////////////////////
+ 
+  
+  // Threshold energy loop
+  
+  for (int i = 10e9; i<500e9 ; i++){
+    
+    cout << i << " , ";
+    if (i == 140e9)
+      {
+    
+   cout << "Threshold";
+  break;
+
+      } 
+  }
+  
+  return 0;
+}
+  
+
+
+// **************************************************************************
+
+

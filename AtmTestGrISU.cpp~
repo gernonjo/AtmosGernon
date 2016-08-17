@@ -1,0 +1,93 @@
+//-*-mode:c++; mode:font-lock;-*-
+/**
+ * \class AtmTest
+ * \ingroup
+ * \brief This code is used to test the modified kasatm/atmosphere classes
+ * they have been modifed by GHS to use the CORSIKA AtmProf tables (or the 
+ * original US76)
+ *
+ * Original Author: Glenn H. Sembroski * $Author: cduke $
+ * $Date: 2011/08/10 20:03:53 $
+ * $Revision: 1.1 $
+ * $Tag$
+ *
+ **/
+
+//Written by:
+// G.H.Sembroski
+//Physics Dept.
+//Purdue Univ.
+//West Lafayette, In. 479096
+//sembrosk@physics.purdue.edu
+//765-494-5172
+
+// 27/12/10
+
+
+
+#include "stdint.h"
+#include <time.h>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+#include "kasatmGrISU.h"
+
+const float NM = 1.0E-09;
+
+int main(int argc, char** argv)
+{
+  // *********************************************************************
+  // Since this is just a test program no need for fancy inputs
+  // Outputs can be root TTree::ReadFile()compatable.
+  // *********************************************************************
+
+  //V.Crab.US76.50km
+  initAtmosphere("atmprof6.dat");
+   
+  double eEnergy = 10e9; // 1 GeV
+  double atmTopKM = 50.0;
+const  float PlankConstant = 4.136e-15;  //eV
+  float wavelength = 450.;  //450 nm.
+  float altM = 100.0;
+  float wavelengthM = wavelength* (NM);
+  float IndexRef = index_of_ref (&wavelengthM, &altM);
+  
+  // get speed of light in the atmosphere
+  ///////////////////////////////////////////////
+  int c = 3e8; 
+  int v= c/(IndexRef); 
+  ///////////////////////////////////////////////
+
+  cout << " c " << c  << endl;
+  
+  cout << " v " << v << endl;
+ 
+
+  string myString(" The electron emits Cherenkov photons ");
+  string myString2(" The electron does not emit Cherenkov photons ");
+
+  
+  if (v > c ) 
+    cout << myString << endl;
+  else if (v < c) {
+    cout << myString2  << endl; 
+  }
+ 
+ 
+
+
+
+     
+  return 0;
+}
+
+
+
+// **************************************************************************
+
+
